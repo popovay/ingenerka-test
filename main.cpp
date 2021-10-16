@@ -18,5 +18,6 @@ int main()
     x=x+70;
 
     }
+    cout<<"Hello world";
     return 0;
 }
