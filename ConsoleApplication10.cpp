@@ -1,10 +1,7 @@
 ﻿// ConsoleApplication10.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
 
-#include "pch.h"
-#include "TXLib.h"
-using namespace std;
-struct menu_button
+
 {
 	
 	HDC img;
