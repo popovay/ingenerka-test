@@ -1,7 +1,24 @@
-﻿// ConsoleApplication10.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
+// ConsoleApplication10.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
 
+#include "pch.h"
+#include "TXLib.h"
+using namespace std;
 
+struct picter
+{
+	HDC img;
+	int x;
+	int y;
+	int w;
+	int h;
+	const char *name;
+
+};
+
+
+
+struct menu_button
 {
 	
 	HDC img;
@@ -14,18 +31,34 @@
 };
 bool Button(int x, int y, int w, int h, const char *str);
 
+void PanelLeft(int nom, const char *PanelName, picter pic[], int x, int y);
+
+
 int main()
 {
 	txCreateWindow(800, 600);
+	picter pic[4];
+
+	pic[0].img = txLoadImage("img\\dom1.bmp");
+	pic[1].img = txLoadImage("img\\dom2.bmp");
+	pic[2].img = txLoadImage("img\\dom3.bmp");
+	pic[3].img = txLoadImage("img\\dom4.bmp");
+
+	for (int i = 0;i < 4;i++)
+	{
+		pic[i].w = 200;
+		pic[i].h = 200;
+	};
 	
 	while (!GetAsyncKeyState(VK_ESCAPE))
 	{
 
 		txBegin();
-	Button(100, 100, 0, 0, "Одиночная игра");
-	Button(100, 170, 0, 0, "Чемпионат");
-	Button(100, 240, 0, 0, "Настройки");
-	Button(100, 310, 0, 0, "О программе");
+	//Button(100, 100, 0, 0, "Создать город");
+	//Button(100, 170, 0, 0, "Загрузить город");
+	//Button(100, 240, 0, 0, "Настройки");
+		
+		PanelLeft(1, "Дома", pic, 120, 20);
 	txEnd();
 	}
 }
@@ -53,4 +86,28 @@ bool Button(int x, int y, int w, int h, const char *str)
 
 	return 0;
 
+}
+void PanelLeft(int nom, const char *PanelName, picter pic[], int x, int y)
+{ 
+
+	int n=x, imgX = x, imgY = y+50, imgRast = 250;
+	
+	txSetFillColor(TX_RED);
+	txRectangle(x-5, y-26, x + 455, y + 455+50);
+	txSetFillColor(TX_WHITE);
+	txSelectFont("Comic Sans MS", 60);
+	txTextOut(x +80 , y-10 , PanelName);
+   
+   txTransparentBlt(txDC(), imgX, imgY, 200, 200, pic[0].img);
+   imgX = imgX + imgRast;
+   txTransparentBlt(txDC(), imgX, imgY, 200, 200, pic[1].img);
+   imgX = n;;
+   imgY = imgY + imgRast;
+
+   txTransparentBlt(txDC(), imgX, imgY, 200, 200, pic[2].img);
+   imgX = imgX + imgRast;
+   txTransparentBlt(txDC(), imgX, imgY, 200, 200, pic[3].img);
+   imgX = n;;
+   imgY = imgY + imgRast;
+   
 }
