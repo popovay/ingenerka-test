@@ -16,7 +16,7 @@ struct menu_button
 
 };
 bool Button(int x, int y, int w, int h, const char *str);
-void PanelLoad(int nom, const char *PanelName);
+void PanelLeft(int nom, const char *PanelName);
 
 
 int main()
