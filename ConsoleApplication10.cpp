@@ -1,4 +1,4 @@
-﻿// ConsoleApplication10.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
+// ConsoleApplication10.cpp : Этот файл содержит функцию "main". Здесь начинается и заканчивается выполнение программы.
 //
 
 #include "pch.h"
@@ -16,6 +16,8 @@ struct menu_button
 
 };
 bool Button(int x, int y, int w, int h, const char *str);
+void PanelLoad(int nom, const char *PanelName);
+
 
 int main()
 {
@@ -25,10 +27,10 @@ int main()
 	{
 
 		txBegin();
-	Button(100, 100, 0, 0, "Одиночная игра");
-	Button(100, 170, 0, 0, "Чемпионат");
-	Button(100, 240, 0, 0, "Настройки");
-	Button(100, 310, 0, 0, "О программе");
+	//Button(100, 100, 0, 0, "Создать город");
+	//Button(100, 170, 0, 0, "Загрузить город");
+	//Button(100, 240, 0, 0, "Настройки");
+		PanelLeft(1, "Дома");
 	txEnd();
 	}
 }
@@ -56,4 +58,43 @@ bool Button(int x, int y, int w, int h, const char *str)
 
 	return 0;
 
+}
+void PanelLeft(int nom, const char *PanelName)
+{
+	int n=250, imgX = 250, imgY = 250, imgRast = 250;;
+	struct picter
+{
+	HDC img;
+	int x;
+	int y;
+	int w;
+	int h;
+	const char *name;
+
+};
+	
+   picter pic[4];
+   
+   pic[0].img = txLoadImage("img\\dom1.bmp");
+   pic[1].img = txLoadImage("img\\dom2.bmp");
+   pic[2].img = txLoadImage("img\\dom3.bmp");
+   pic[3].img = txLoadImage("img\\dom4.bmp");
+   for (int i=0;i<4;i++)
+   {
+	   pic[i].w = 200;
+	   pic[i].h = 200;
+   };
+   
+   txTransparentBlt(txDC(), imgX, imgY, 200, 200, pic[0].img);
+   imgX = imgX + imgRast;
+   txTransparentBlt(txDC(), imgX, imgY, 200, 200, pic[1].img);
+   imgX = n;;
+   imgY = imgY + imgRast;
+
+   txTransparentBlt(txDC(), imgX, imgY, 200, 200, pic[2].img);
+   imgX = imgX + imgRast;
+   txTransparentBlt(txDC(), imgX, imgY, 200, 200, pic[3].img);
+   imgX = n;;
+   imgY = imgY + imgRast;
+   
 }
