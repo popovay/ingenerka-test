@@ -71,6 +71,8 @@ int main()
 			if (nomMenu) { sprite = 3; }
 			nomMenu = Button(100, 240, 0, 0, "Настройки");
 			if (nomMenu) { sprite = 4; }
+			nomMenu = Button(100, 310, 0, 0, "Выход");
+			if (nomMenu) { return 0; }
 		}
 
 		if (sprite == 2) {
@@ -84,6 +86,8 @@ int main()
 			if (nomMenu) { sprite = 6; }
 			nomMenu = Button(190, 10, 80, 20, "Гл.меню");
 			if (nomMenu) { sprite = 1; }
+			nomMenu = Button(280, 10, 80, 20, "Выход");
+			if (nomMenu) { return 0; }
 
 		}
 		if (sprite == 1) {}
