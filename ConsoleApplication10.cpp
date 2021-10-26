@@ -17,8 +17,8 @@ struct picter
 
 };
 
-picter img_in_town[1000];
-int img_in_town_kol = 0;
+picter img_in_town[1000] = {0};
+int img_in_town_kol = 0, nom_pic = -1;
 
 struct menu_button
 {
@@ -47,6 +47,7 @@ int main()
 	pic[1].img = txLoadImage("img\\dom2.bmp");
 	pic[2].img = txLoadImage("img\\dom3.bmp");
 	pic[3].img = txLoadImage("img\\dom4.bmp");
+	
 
 	for (int i = 0;i < 4;i++)
 	{
@@ -89,6 +90,11 @@ int main()
 		//
 	txEnd();
 	}
+	txDeleteDC(pic[0].img);
+	txDeleteDC(pic[1].img);
+	txDeleteDC(pic[2].img);
+	txDeleteDC(pic[3].img);
+	for (int i=0;i< img_in_town_kol; i++) txDeleteDC(img_in_town[i].img);
 }
 
 
@@ -115,7 +121,10 @@ bool Button(int x, int y, int w, int h, const char *str)
 
 	if (txMouseX() > x && txMouseY() > y && txMouseX() < x + w && txMouseY() < y + h && txMouseButtons() == 1)
 	{
-		txSleep(100);
+		while (GetAsyncKeyState(VK_LBUTTON))
+		{
+			;
+		}
 		return 1;
 	}
 		
@@ -125,6 +134,7 @@ bool Button(int x, int y, int w, int h, const char *str)
 }
 void PanelLeft(int nom, const char *PanelName, picter pic[], int x, int y)
 { 
+	
 	int img_w = 80, img_h = 80;
 
 	int n=x, imgX = x, imgY = y, imgRast = 30;
@@ -135,21 +145,99 @@ void PanelLeft(int nom, const char *PanelName, picter pic[], int x, int y)
 	txSelectFont("Comic Sans MS", 40);
 	txTextOut(x +50 , y , PanelName);
 	imgX = x + 5, imgY = y + 50;
-   txTransparentBlt(txDC(), imgX, imgY, img_w, img_h, pic[0].img);
-  
-   imgX = imgX  +img_w+imgRast;
-   txTransparentBlt(txDC(), imgX, imgY, img_w, img_h, pic[1].img);
-   imgX = n;;
-   imgY = imgY + img_h + imgRast;
 
-   txTransparentBlt(txDC(), imgX, imgY, img_w, img_h, pic[2].img);
-   imgX = imgX + img_w + imgRast;
-   txTransparentBlt(txDC(), imgX, imgY, img_w, img_h, pic[3].img);
-   imgX = n;;
-   imgY = imgY + img_h + imgRast;
+	// vyvod picter right
+	for (int i = 0;i < img_in_town_kol;i++)
+		{
+		HDC save = txCreateCompatibleDC(200, 200);
+		txTransparentBlt(save, 0, 0, 200,200, img_in_town[i].img, 0, 0, TX_WHITE);
+		if (img_in_town[i].Visible)
+			//txTransparentBlt(txDC(), img_in_town[i].x, img_in_town[i].y, img_in_town[i].w, img_in_town[i].h, img_in_town[i].img);
+		Win32::StretchBlt(txDC(), img_in_town[i].x, img_in_town[i].y, img_in_town[i].w, img_in_town[i].h,  save, 0, 0,
+		200,200, SRCCOPY);
+			//Win32::TransparentBlt(txDC(), img_in_town[i].x, img_in_town[i].y, img_in_town[i].w, img_in_town[i].h, img_in_town[i].img, img_in_town[i].x, img_in_town[i].y, img_in_town[i].w, img_in_town[i].h, RGB(255, 255, 255));
+		txDeleteDC(save);
+		}
+
+	// vyvod picter left
+	for (int i=0;i<4;i++)
+	{
+		HDC save = txCreateCompatibleDC(200, 200);
+		txBitBlt(save, 0, 0, 200, 200, pic[i].img);
+		Win32::StretchBlt(txDC(), imgX, imgY, img_w, img_h, save, 0, 0,	200, 200, SRCCOPY);
+		//Win32::TransparentBlt(txDC(), img_in_town[i].x, img_in_town[i].y, img_in_town[i].w, img_in_town[i].h, img_in_town[i].img, img_in_town[i].x, img_in_town[i].y, img_in_town[i].w, img_in_town[i].h, RGB(255, 255, 255));
+		txDeleteDC(save);
+	// txTransparentBlt(txDC(), imgX, imgY, img_w, img_h, pic[i].img);
+	 // click on picter left
+	 if (txMouseX() > imgX && txMouseY() > imgY && txMouseX() < imgX + img_w && txMouseY() < imgY + img_h && txMouseButtons() == 1)
+		{
+			 nom_pic = i;
+	     
+		}
+     if (i%2==0)   imgX = imgX + img_w + imgRast;
+     else {
+		     imgX = n;;
+		     imgY = imgY + img_h + imgRast;
+		 }
+	
+	}
+	// draw picter right
+   if (txMouseX() > x + img_w + img_w + imgRast + 5 && txMouseButtons() == 1 && nom_pic != -1)
+   {
+	   int x_begin = txMouseX();
+	   int y_begin = txMouseY();
+	   int x_end = txMouseX();
+	   int y_end = txMouseY();
+	   while (GetAsyncKeyState(VK_LBUTTON))
+	   {
+		   x_end = txMouseX();
+		   y_end = txMouseY();
+		   txSetFillColor(TX_GRAY);
+		   txSetColor(TX_GRAY, 1);
+
+		   txRectangle(x_begin, y_begin, x_end, y_end);
+
+		   txSleep(100);
+	   }
+	   // add new picter right
+	   img_in_town[img_in_town_kol].img = pic[nom_pic].img;
+
+	   img_in_town[img_in_town_kol].w = x_end - x_begin;
+	   img_in_town[img_in_town_kol].h = y_end - y_begin;
+	   img_in_town[img_in_town_kol].Visible = TRUE;
+	   img_in_town[img_in_town_kol].x = x_begin;
+	   img_in_town[img_in_town_kol].y = y_begin;
+	   img_in_town_kol++;
+	   nom_pic = -1;
+
+	  
+
+   }
+
+   //  ОТМЕНА
+   if (GetAsyncKeyState(VK_CONTROL) & 0x8000)
    
-
+	   //txMessageBox("Отмена");
+	   if (img_in_town_kol>0)
+	   {
+	   img_in_town_kol--;
+	   img_in_town[img_in_town_kol].Visible = FALSE;
+	   txSleep(100);
+	   }
+	   else  txMessageBox("Действий нет");
+   if (GetAsyncKeyState(VK_SHIFT))
+   {
+	   //txMessageBox("Отмена");
+	   if (img_in_town[img_in_town_kol].w != 0) {
+		   
+		   img_in_town[img_in_town_kol].Visible = TRUE;
+		   img_in_town_kol++;
+		   txSleep(100);
+	   }
+	   else  txMessageBox("Действий нет");
+   }
+   
+   txSelectFont("Arial", 16);
   
-	txSelectFont("Arial", 16);	 
 
 }
